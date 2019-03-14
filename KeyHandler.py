@@ -11,7 +11,6 @@ class KeyHandler:
         self.__keysHandlers = dict()
 
     def on_key_press(self, key_code, modifiers):
-        print(key_code, modifiers)
         if key_code in self.__keysHandlers and 'press' in self.__keysHandlers[key_code]:
             self.__keysHandlers[key_code]['press']()
 
