@@ -3,8 +3,8 @@ import pyglet
 
 
 class Sprite(cocos.sprite.Sprite):
-    def __init__(self, *args):
-        super(Sprite, self).__init__(*args)
+    def __init__(self, *args, **kwargs):
+        super(Sprite, self).__init__(*args, **kwargs)
 
     def do(self, action, target=None):
         """Executes an :class:`.Action`.
