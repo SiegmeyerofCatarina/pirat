@@ -2,6 +2,15 @@ import cocos
 import pyglet
 
 
+class Move(cocos.actions.Move):
+    def __init__(self, *args, **kwargs):
+        super(Move, self).__init__(self, *args, **kwargs)
+
+class Layer(cocos.layer.Layer):
+    def __init__(self):
+        super(Layer, self).__init__()
+
+
 class Sprite(cocos.sprite.Sprite):
     def __init__(self, *args, **kwargs):
         super(Sprite, self).__init__(*args, **kwargs)

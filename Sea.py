@@ -1,8 +1,10 @@
 import cocos
 import pyglet
 
+from Engine import Layer, Sprite
 
-class Sea(cocos.layer.Layer):
+
+class Sea(Layer):
     def __init__(self):
         super().__init__()
         img = pyglet.image.load("res/sea.png")
@@ -13,8 +15,7 @@ class Sea(cocos.layer.Layer):
         for i in range(5):
             for j in range(5):
                 tmp = i * 5 + j
-                spr[tmp] = cocos.sprite.Sprite(animation_sprite)
+                spr[tmp] = Sprite(animation_sprite)
                 spr[tmp].position = i * 512, j * 512
                 spr[tmp].velocity = (0, 0)
-                # spr[tmp].do(Mover())
                 self.add(spr[tmp])
