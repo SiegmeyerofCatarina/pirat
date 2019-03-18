@@ -1,4 +1,3 @@
-import cocos
 import pyglet
 
 from Engine import Layer, Sprite

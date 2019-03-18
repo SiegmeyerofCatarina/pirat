@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 from Engine import Move, Layer, Sprite
 from KeyHandler import KeyHandler
@@ -20,7 +21,7 @@ class Mover(Move):
 
     @property
     def radian(self):
-        return self.angle * math.pi / 180
+        return self.angle * np.pi / 180
 
     @property
     def velocity(self):
@@ -59,23 +60,30 @@ class Boat(KeyHandler, Layer):
             'turn_speed': 0.005
         }
         self.spr.do(Mover(self.params))
-        self.cannon1 = Cannon('res/Ship parts/cannon.png',
-                              rotation=90,
-                              position=(self.spr.width/4, 2))
-        self.cannon2 = Cannon('res/Ship parts/cannon.png',
-                              rotation=-90,
-                              position=(-self.spr.width/4, 2))
+        self.cannon1 = Cannon(
+            {
+                'rotation': 90,
+                'position': (self.spr.width / 4, 2),
+            },
+            self.params,
+        )
+        self.cannon2 = Cannon(
+            {
+                'rotation': -90,
+                'position': (-self.spr.width / 4, 2),
+            },
+            self.params,)
 
-        self.spr.add(self.cannon1)
-        self.spr.add(self.cannon2)
+        self.add(self.cannon1)
+        self.spr.add(self.cannon1.spr)
+        self.spr.add(self.cannon2.spr)
         self.add(self.spr)
 
         self.key_handler('UP', self.go_up)
         self.key_handler('DOWN', self.go_down)
         self.key_handler('RIGHT', self.turn_right_start, self.turn_right_stop)
         self.key_handler('LEFT', self.turn_left_start, self.turn_left_stop)
-
-        self.key_handler('SPACE', self.fire)
+        self.key_handler('SPACE', self.cannon1.fire)
 
         self.ball = None
 
@@ -97,35 +105,65 @@ class Boat(KeyHandler, Layer):
     def turn_left_stop(self):
         self.params['turn_left'] = False
 
+
+class CannonBall:
+    def __init__(self, params):
+        super(CannonBall, self).__init__()
+
+        self.spr = Sprite(
+            r'res/Ship parts/cannonBall.png',
+            scale=1,
+            position=params['position'],
+        )
+        self.spr.velocity = params['ship_speed']
+        self.spr.do(Ballistics(params))
+
+
+class Cannon(KeyHandler, Layer):
+    def __init__(self, spr_params, params):
+        super(Cannon, self).__init__()
+        self.params = params
+        self.spr = Sprite(
+            'res/Ship parts/cannon.png',
+            rotation=spr_params['rotation'],
+            position=spr_params['position'],
+        )
+
     def fire(self):
         print('fire')
-        params = {'speed': 500,
-                  'degrees': self.rotation + 90}
-        self.ball = Shot(params)
-        # self.ball.do(Ballistics(params))
-        self.add(self.ball)
+        rho, phi = self.params['speed'], self.params['degrees']
+        ship_speed = rho * np.sin(phi * np.pi / 180), rho * np.cos(phi * np.pi / 180)
+        cannon_muzzle_position = np.array(self.spr.position) + np.array([self.spr.width / 2, 0])
+        cannon_bottom_position = cannon_muzzle_position + np.array([0, self.spr.height])
+        true_cannon_muzzle_position = self.spr.point_to_world(cannon_muzzle_position)
+        true_cannon_bottom_position = self.spr.point_to_world(cannon_bottom_position)
+        firedirection = - true_cannon_muzzle_position + true_cannon_bottom_position
+        true_rotation = np.arctan2(*firedirection) * 180 / np.pi
 
-
-class Cannon(Sprite):
-    def __init__(self, *args, **kwargs):
-        super(Cannon, self).__init__(*args, **kwargs)
-
-
-class Shot(Layer):
-    def __init__(self, params):
-        super(Shot, self).__init__()
-        self.params = params
-        self.kernel = Sprite(r'res/Ship parts/cannonBall.png', scale=100)
-        self.kernel.velocity = params['speed']
-        self.kernel.angle = params['degrees']
-        self.velocity = (200, 200)
+        params = {
+            'position': self.spr.point_to_world(self.spr.position),
+            'speed': 50,
+            'degrees': true_rotation,
+            'ship_speed': ship_speed
+        }
+        cannon_ball = CannonBall(params)
+        self.add(cannon_ball.spr)
 
 
 class Ballistics(Mover):
     def __init__(self, params):
-        super().__init__(params)
+        super(Ballistics, self).__init__(params)
+
+    def start(self):
+        self.target.rotation = self.params['degrees']
+        self.target.velocity = (
+            self.speed * self.velocity[0] + self.target.velocity[0],
+            self.speed * self.velocity[1] + self.target.velocity[1]
+        )
+
+
 
     def step(self, dt):
         super(Mover, self).step(dt)
-        self.target.rotation = self.params['degrees']
-        self.target.velocity = self.speed * self.velocity[0], self.speed * self.velocity[1]
+
+        # self.target.velocity = self.speed * self.velocity[0], self.speed * self.velocity[1]
