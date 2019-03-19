@@ -7,7 +7,6 @@ class CannonBall:
 
         self.spr = Sprite(
             r'res/ship_parts/cannonBall.png',
-            scale=1,
             position=params['position'],
         )
         self.spr.velocity = params['ship_speed']

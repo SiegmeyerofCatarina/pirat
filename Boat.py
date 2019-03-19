@@ -29,11 +29,6 @@ class Boat(KeyHandler, Layer):
 
         self.cannon_slots = (
             {
-                'position': (- self.spr.image_anchor_x, - self.spr.image_anchor_y),
-                'rotation': 90,
-                'cannon': None,
-            },
-            {
                 'position': (13 - self.spr.image_anchor_x, 56 - self.spr.image_anchor_y),
                 'rotation': -90,
                 'cannon': None,
@@ -68,8 +63,6 @@ class Boat(KeyHandler, Layer):
             'turn_speed': 0.005
         }
         self.spr.do(Mover(self.params))
-        print(self.spr.image_anchor_x)
-
 
         for i in range(4):
             slot = self.get_empty_slot()
@@ -87,8 +80,6 @@ class Boat(KeyHandler, Layer):
         self.key_handler('DOWN', self.go_down)
         self.key_handler('RIGHT', self.turn_right_start, self.turn_right_stop)
         self.key_handler('LEFT', self.turn_left_start, self.turn_left_stop)
-
-        # self.ball = None
 
     def turn_right_start(self):
         self.params['turn_right'] = True
