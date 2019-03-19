@@ -13,6 +13,7 @@ class Cannon(KeyHandler, Layer):
             'res/ship_parts/cannon.png',
             rotation=spr_params['rotation'],
             position=spr_params['position'],
+            anchor=(8, 12)
         )
 
     def fire(self):
@@ -27,7 +28,7 @@ class Cannon(KeyHandler, Layer):
         true_rotation = np.arctan2(*firedirection) * 180 / np.pi
 
         params = {
-            'position': self.spr.point_to_world(self.spr.position),
+            'position': true_cannon_muzzle_position, #self.spr.point_to_world(self.spr.position),
             'speed': 200,
             'degrees': true_rotation,
             'ship_speed': ship_speed,

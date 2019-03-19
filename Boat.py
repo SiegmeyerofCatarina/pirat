@@ -23,7 +23,37 @@ class Boat(KeyHandler, Layer):
     def __init__(self):
         super(Boat, self).__init__()
 
-        self.spr = Sprite('res/ship_parts/hullLarge_1.png', scale=1)
+
+
+        self.spr = Sprite('res/ship_parts/hullLarge_1.png')
+
+        self.cannon_slots = (
+            {
+                'position': (- self.spr.image_anchor_x, - self.spr.image_anchor_y),
+                'rotation': 90,
+                'cannon': None,
+            },
+            {
+                'position': (13 - self.spr.image_anchor_x, 56 - self.spr.image_anchor_y),
+                'rotation': -90,
+                'cannon': None,
+            },
+            {
+                'position': (37 - self.spr.image_anchor_x, 56 - self.spr.image_anchor_y),
+                'rotation': 90,
+                'cannon': None,
+            },
+            {
+                'position': (13 - self.spr.image_anchor_x, 38 - self.spr.image_anchor_y),
+                'rotation': -90,
+                'cannon': None,
+            },
+            {
+                'position': (37 - self.spr.image_anchor_x, 38 - self.spr.image_anchor_y),
+                'rotation': 90,
+                'cannon': None,
+            },
+        )
 
         # self.spr.anchor = self.spr.
         self.spr.position = WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2
@@ -38,33 +68,27 @@ class Boat(KeyHandler, Layer):
             'turn_speed': 0.005
         }
         self.spr.do(Mover(self.params))
-        self.cannon1 = Cannon(
-            {
-                'rotation': 90,
-                'position': (self.spr.width / 4, 2),
-            },
-            self.params,
-        )
-        self.cannon2 = Cannon(
-            {
-                'rotation': -90,
-                'position': (-self.spr.width / 4, 2),
-            },
-            self.params,
-        )
+        print(self.spr.image_anchor_x)
 
-        self.add(self.cannon1)
-        self.spr.add(self.cannon1.spr)
-        self.spr.add(self.cannon2.spr)
+
+        for i in range(4):
+            slot = self.get_empty_slot()
+            if not slot:
+                break
+            cannon = Cannon(slot, self.params)
+            self.cannon_add(slot, cannon)
+            self.key_handler('SPACE', cannon.fire)
+
+
+
         self.add(self.spr)
 
         self.key_handler('UP', self.go_up)
         self.key_handler('DOWN', self.go_down)
         self.key_handler('RIGHT', self.turn_right_start, self.turn_right_stop)
         self.key_handler('LEFT', self.turn_left_start, self.turn_left_stop)
-        self.key_handler('SPACE', self.cannon1.fire)
 
-        self.ball = None
+        # self.ball = None
 
     def turn_right_start(self):
         self.params['turn_right'] = True
@@ -83,3 +107,15 @@ class Boat(KeyHandler, Layer):
 
     def turn_left_stop(self):
         self.params['turn_left'] = False
+
+    def cannon_add(self, slot, cannon):
+        slot['cannon'] = cannon
+        self.add(cannon)
+        self.spr.add(cannon.spr)
+
+    def get_empty_slot(self):
+        for slot in self.cannon_slots:
+            if not slot['cannon']:
+                return slot
+
+
