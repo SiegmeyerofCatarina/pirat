@@ -1,10 +1,33 @@
 import cocos
 import pyglet
+import numpy as np
 
 
 class Move(cocos.actions.Move):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, params, *args, **kwargs):
         super(Move, self).__init__(self, *args, **kwargs)
+        self.params = params
+
+    @property
+    def speed(self):
+        return self.params['speed']
+
+    @property
+    def angle(self):
+        return self.params['degrees']
+
+    @property
+    def radian(self):
+        return self.angle * np.pi / 180
+
+    @property
+    def velocity(self):
+        return (
+            np.sin(self.radian),
+            np.cos(self.radian),
+        )
+
+
 
 class Layer(cocos.layer.Layer):
     def __init__(self):

@@ -1,6 +1,3 @@
-import math
-import numpy as np
-
 from Cannon import Cannon
 from Engine import Move, Layer, Sprite
 from KeyHandler import KeyHandler
@@ -9,27 +6,7 @@ from settings import WINDOW_WIDTH, WINDOW_HEIGHT
 
 class Mover(Move):
     def __init__(self, params):
-        super().__init__()
-        self.params = params
-
-    @property
-    def speed(self):
-        return self.params['speed']
-
-    @property
-    def angle(self):
-        return self.params['degrees']
-
-    @property
-    def radian(self):
-        return self.angle * np.pi / 180
-
-    @property
-    def velocity(self):
-        return (
-            math.sin(self.radian),
-            math.cos(self.radian),
-        )
+        super().__init__(params)
 
     def step(self, dt):
         super().step(dt)
