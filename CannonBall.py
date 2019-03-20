@@ -10,6 +10,7 @@ class CannonBall:
             position=params['position'],
         )
         self.spr.velocity = params['ship_speed']
+        self.spr.acceleration = (0, 0)
         self.spr.do(Ballistics(params))
 
 
@@ -23,4 +24,13 @@ class Ballistics(Move):
             self.speed * self.velocity[0] + self.target.velocity[0],
             self.speed * self.velocity[1] + self.target.velocity[1]
         )
+        air_resistance = 0.5
+        self.target.acceleration = (
+            - air_resistance * self.target.velocity[0],
+            - air_resistance * self.target.velocity[1],
+        )
 
+    def step(self, dt):
+        super().step(dt)
+        if self.target.velocity[0]**2 + self.target.velocity[0]**2 < 1e4:
+            self.target.kill()

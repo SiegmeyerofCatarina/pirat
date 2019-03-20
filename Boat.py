@@ -53,8 +53,10 @@ class Boat(KeyHandler, Layer):
         # self.spr.anchor = self.spr.
         self.spr.position = WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2
         self.rotate_speed = 10
-        self.speed = 100
+        self.speed_step = 20
+        self.speed_max = 150
         self.spr.velocity = (0, 0)
+        self.spr.acceleration = (0, 0)
         self.params = {
             'speed': 0,
             'degrees': 0,
@@ -63,6 +65,7 @@ class Boat(KeyHandler, Layer):
             'turn_speed': 0.005
         }
         self.spr.do(Mover(self.params))
+
 
         for i in range(4):
             slot = self.get_empty_slot()
@@ -88,10 +91,10 @@ class Boat(KeyHandler, Layer):
         self.params['turn_left'] = True
 
     def go_up(self):
-        self.params['speed'] += self.speed
+        self.params['speed'] += self.speed_step
 
     def go_down(self):
-        self.params['speed'] -= self.speed
+        self.params['speed'] -= self.speed_step
 
     def turn_right_stop(self):
         self.params['turn_right'] = False
