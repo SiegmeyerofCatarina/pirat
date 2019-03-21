@@ -30,7 +30,7 @@ class Move(cocos.actions.Move):
 
 
 
-class Layer(cocos.layer.Layer):
+class Layer(cocos.layer.ScrollableLayer):
     def __init__(self):
         super(Layer, self).__init__()
 
