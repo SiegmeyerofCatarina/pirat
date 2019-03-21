@@ -2,7 +2,7 @@ from Cannon import Cannon
 from Engine import Move, Layer, Sprite
 from KeyHandler import KeyHandler
 from settings import WINDOW_WIDTH, WINDOW_HEIGHT
-from Scroller import scroller
+from game import world
 
 
 class Mover(Move):
@@ -18,14 +18,12 @@ class Mover(Move):
                 self.params['degrees'] += self.params['turn_speed'] * self.speed
         self.target.rotation = self.params['degrees']
         self.target.velocity = self.speed * self.velocity[0], self.speed * self.velocity[1]
-        scroller.set_focus(self.target.x, self.target.y)
+        world.set_focus(self.target.x, self.target.y)
 
 
 class Boat(KeyHandler, Layer):
     def __init__(self):
         super(Boat, self).__init__()
-
-
 
         self.spr = Sprite('res/ship_parts/hullLarge_1.png')
 
@@ -68,7 +66,6 @@ class Boat(KeyHandler, Layer):
         }
         self.spr.do(Mover(self.params))
 
-
         for i in range(4):
             slot = self.get_empty_slot()
             if not slot:
@@ -76,8 +73,6 @@ class Boat(KeyHandler, Layer):
             cannon = Cannon(slot, self.params)
             self.cannon_add(slot, cannon)
             self.key_handler('SPACE', cannon.fire)
-
-
 
         self.add(self.spr)
 
@@ -113,5 +108,3 @@ class Boat(KeyHandler, Layer):
         for slot in self.cannon_slots:
             if not slot['cannon']:
                 return slot
-
-

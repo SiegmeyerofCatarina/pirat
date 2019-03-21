@@ -32,5 +32,5 @@ class Ballistics(Move):
 
     def step(self, dt):
         super().step(dt)
-        if self.target.velocity[0]**2 + self.target.velocity[0]**2 < 1e4:
+        if self.target.velocity[0] ** 2 + self.target.velocity[0] ** 2 < 1e4:
             self.target.kill()

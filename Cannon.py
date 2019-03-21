@@ -3,7 +3,7 @@ import numpy as np
 from CannonBall import CannonBall
 from Engine import Layer, Sprite
 from KeyHandler import KeyHandler
-from Scroller import  scroller
+from game import world
 
 
 class Cannon(KeyHandler, Layer):
@@ -18,7 +18,6 @@ class Cannon(KeyHandler, Layer):
         )
 
     def fire(self):
-
         rho, phi = self.params['speed'], self.params['degrees']
         ship_speed = rho * np.sin(phi * np.pi / 180), rho * np.cos(phi * np.pi / 180)
         true_cannon_muzzle_position = self.spr.point_to_world((0, self.spr.height - self.spr.image_anchor_y))
@@ -27,12 +26,11 @@ class Cannon(KeyHandler, Layer):
         true_rotation = np.arctan2(*fire_direction) * 180 / np.pi
 
         params = {
-            'position': scroller.screen_to_world(*true_cannon_muzzle_position),
+            'position': world.screen_to_world(*true_cannon_muzzle_position),
             'speed': 400,
             'degrees': true_rotation,
             'ship_speed': ship_speed,
         }
         cannon_ball = CannonBall(params)
-
 
         self.add(cannon_ball.spr)

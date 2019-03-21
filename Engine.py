@@ -29,7 +29,6 @@ class Move(cocos.actions.Move):
         )
 
 
-
 class Layer(cocos.layer.ScrollableLayer):
     def __init__(self):
         super(Layer, self).__init__()
@@ -38,7 +37,6 @@ class Layer(cocos.layer.ScrollableLayer):
 class Sprite(cocos.sprite.Sprite):
     def __init__(self, *args, **kwargs):
         super(Sprite, self).__init__(*args, **kwargs)
-
 
     def do(self, action, target=None):
         """Executes an :class:`.Action`.
