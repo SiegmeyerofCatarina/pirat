@@ -3,6 +3,7 @@ import numpy as np
 from CannonBall import CannonBall
 from Engine import Layer, Sprite
 from KeyHandler import KeyHandler
+from Scroller import  scroller
 
 
 class Cannon(KeyHandler, Layer):
@@ -26,8 +27,8 @@ class Cannon(KeyHandler, Layer):
         true_rotation = np.arctan2(*fire_direction) * 180 / np.pi
 
         params = {
-            'position': true_cannon_muzzle_position,
-            'speed': 200,
+            'position': scroller.screen_to_world(*true_cannon_muzzle_position),
+            'speed': 400,
             'degrees': true_rotation,
             'ship_speed': ship_speed,
         }
